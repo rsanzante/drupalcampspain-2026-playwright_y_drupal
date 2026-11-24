@@ -1,0 +1,5 @@
+# Seguridad de la cadena de suministro
+# No instalar ninguna versión (incluidas dependencias transitivas) con menos de 15 días
+minimumReleaseAge: 21600   # minutos = 15 días
+# No ejecutar scripts postinstall salvo los permitidos explícitamente
+onlyBuiltDependencies: []

@@ -1,0 +1,13 @@
+services:
+  slidev:
+    build: .docker
+    image: drupalcamp-slidev:local
+    user: "1000:1000"
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "127.0.0.1:3030:3030"   # solo accesible desde localhost
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    command: pnpm exec slidev --remote --bind 0.0.0.0 --port 3030

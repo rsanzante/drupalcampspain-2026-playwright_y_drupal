@@ -1,0 +1,172 @@
+/*
+ * Patrones de contenido de la plantilla oficial (diapositivas 9–21 del PPTX).
+ * Se usan dentro del layout `default`; ver ejemplos en slides-templates.md.
+ * Los patrones solo colocan; el texto se estiliza con las clases de texto.
+ */
+
+/*
+ * Clases de texto: escala del PPTX (1 pt = 4/3 px). El cuerpo (18 pt, 24 px,
+ * tinta) no necesita clase. Para antetítulos y etiquetas: `dcs-antetitulo` y
+ * `dcs-etiqueta` (uno.config.ts).
+ */
+.slidev-layout .texto-pequeno  { font-size: 21px; line-height: 1.35; color: var(--dcs-tinta); }             /* 16 pt */
+.slidev-layout .texto-grande   { font-size: 27px; line-height: 1.3;  color: var(--dcs-navy); }              /* 20 pt */
+.slidev-layout .subtitulo      { font-size: 27px; line-height: 1.3;  color: var(--dcs-azul); }              /* 20 pt */
+.slidev-layout .titulo-pequeno { font-size: 24px; line-height: 1.25; font-weight: 700; color: var(--dcs-navy); } /* 18 pt */
+.slidev-layout .titulo-bloque  { font-size: 27px; line-height: 1.2;  font-weight: 700; color: var(--dcs-navy); } /* 20 pt */
+.slidev-layout .titulo-tarjeta { font-size: 29px; line-height: 1.2;  font-weight: 700; color: var(--dcs-navy); } /* 22 pt */
+.slidev-layout .mensaje        { font-size: 32px; line-height: 1.25; font-weight: 700; color: var(--dcs-navy); } /* 24 pt */
+.slidev-layout .cifra          { font-size: 37px; line-height: 1.1;  font-weight: 700; color: var(--dcs-azul); } /* 28 pt */
+.slidev-layout .frase          { font-size: 43px; line-height: 1.25; font-weight: 700; color: var(--dcs-navy); } /* 32 pt */
+.slidev-layout :is(.mensaje, .frase) code { font-size: 0.8em; }
+
+/* Hueco de imagen pendiente: icono centrado, como en la plantilla */
+.hueco-imagen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 220px;
+  height: 100%;
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--dcs-cielo);
+  text-align: center;
+  font-size: 16px;
+  color: var(--dcs-azul);
+}
+.hueco-imagen .dcs-icono { font-size: 56px; }
+
+/* Círculo de icono (64–100 px) con fondo pastel */
+.circulo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 96px;
+  block-size: 96px;
+  border-radius: 50%;
+  font-size: 40px;
+  color: var(--dcs-navy);
+  background: var(--dcs-cielo);
+}
+.circulo.atardecer { background: var(--dcs-atardecer); }
+.circulo.amanecer { background: var(--dcs-amanecer); }
+.circulo.blanco { background: #fff; }
+.circulo.bruma { background: var(--dcs-bruma); }
+.circulo.pequeno { inline-size: 80px; block-size: 80px; font-size: 34px; }
+
+/* 15 · Proceso en cuatro pasos */
+.proceso {
+  display: grid;
+  grid-template-columns: repeat(var(--pasos, 4), 1fr);
+  margin-top: 48px;
+  text-align: center;
+}
+.proceso .paso { display: flex; flex-direction: column; align-items: center; }
+.proceso .titulo-pequeno { margin: 20px 0 0; }
+.proceso .numero {
+  position: relative;
+  inline-size: 100%;
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+.proceso .numero::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  border-top: 2px solid var(--dcs-cian);
+}
+.proceso .paso:first-child .numero::before { inset-inline-start: 50%; }
+.proceso .paso:last-child .numero::before { inset-inline-end: 50%; }
+.proceso .numero span {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 42px;
+  block-size: 42px;
+  border-radius: 50%;
+  background: var(--dcs-navy);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+}
+.proceso .numero.contrib span { background: var(--dcs-amarillo); color: var(--dcs-navy); }
+.proceso .texto-pequeno { margin: 24px 0 0; padding-inline: 12px; }
+
+/* 16 · Tarjetas con icono */
+.tarjetas-icono { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 32px; }
+.tarjetas-icono > div { min-block-size: 330px; padding: 32px; }
+.tarjetas-icono .circulo { background: var(--dcs-bruma); color: var(--dcs-azul); inline-size: 80px; block-size: 80px; font-size: 34px; }
+.tarjetas-icono .titulo-bloque { margin: 28px 0 14px; }
+
+/* 17 · Icono, título y texto (2×2) */
+.icono-texto { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 48px; margin-top: 16px; }
+.icono-texto > div { display: grid; grid-template-columns: 96px 1fr; gap: 28px; align-items: start; }
+.icono-texto .titulo-bloque { margin: 8px 0 12px; }
+.icono-texto .texto-pequeno { margin: 0; }
+
+/* 18 · Tres tarjetas de color */
+.tarjetas-color { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 30px; }
+.tarjetas-color > div { min-block-size: 400px; padding: 40px; }
+.tarjetas-color .titulo-tarjeta { margin: 0 0 40px; }
+
+/* 19 · Tres mensajes (borde navy, número azul) */
+.mensajes { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 30px; margin-top: 48px; }
+.mensajes > div {
+  min-block-size: 300px;
+  padding: 40px;
+  border: 2px solid var(--dcs-navy);
+  border-radius: 12px;
+}
+.mensajes .cifra { margin: 0 0 28px; }
+.mensajes .mensaje { margin: 0; }
+.mensajes.compactos > div { min-block-size: 0; padding: 28px 32px; }
+.mensajes.compactos .cifra { margin-bottom: 12px; font-size: 30px; }
+.mensajes.compactos .mensaje { font-size: 26px; }
+
+/* 20 · Listas con icono */
+.listas-icono { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 40px; }
+.listas-icono .cabecera { display: flex; align-items: center; gap: 22px; margin-bottom: 28px; }
+.listas-icono .cabecera .circulo { inline-size: 80px; block-size: 80px; font-size: 34px; color: var(--dcs-azul); }
+.listas-icono .titulo-tarjeta { margin: 0; }
+.listas-icono li + li { margin-top: 12px; }
+
+/* 21 · Frase destacada */
+.frase-destacada {
+  margin-top: 48px;
+  padding: 96px 72px;
+  border-radius: 12px;
+  background: var(--dcs-atardecer);
+}
+.frase-destacada .frase { margin: 0; }
+.frase-destacada .texto-pequeno { margin: 36px 0 0; }
+
+/* 09 · Dos columnas (antes y después) */
+.columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.columnas .subtitulo { margin: 0 0 20px; }
+
+/* 10 · Texto e imagen */
+.texto-imagen { display: grid; grid-template-columns: 560px 1fr; gap: 56px; block-size: 440px; }
+
+/* 13 · Tres imágenes con pie */
+.tres-imagenes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.tres-imagenes .hueco-imagen { block-size: 280px; min-height: 0; }
+.tres-imagenes .texto-pequeno { margin-top: 20px; }
+
+/* Tabla de soporte */
+.tabla-soporte { inline-size: 100%; font-size: 24px; border-collapse: collapse; }
+.tabla-soporte th,
+.tabla-soporte td { padding: 10px 16px; text-align: start; border-block-end: 1px solid var(--dcs-cielo); }
+.tabla-soporte th { color: var(--dcs-azul); }
+.tabla-soporte .si { color: var(--dcs-azul); }
+.tabla-soporte .no { color: var(--dcs-tinta); opacity: 0.7; }
+
+/* 14 · Texto y galería */
+.galeria .texto { max-inline-size: 1165px; }
+.galeria .fotos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 24px; }
+.galeria .fotos > * { block-size: 298px; min-height: 0; border-radius: 12px; overflow: hidden; }
+.galeria .fotos img { inline-size: 100%; block-size: 100%; object-fit: cover; }

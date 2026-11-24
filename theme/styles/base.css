@@ -1,0 +1,120 @@
+/*
+ * DrupalCamp Spain 2026 — estilos base
+ * Lienzo de 1280×720 px (= 960×540 pt de la plantilla) → 1 pt = 4/3 px
+ *   Títulos     Inter Bold 28–44 pt  → 37–59 px
+ *   Subtítulos  Inter 16–20 pt       → 21–27 px
+ *   Cuerpo      Inter Regular 18 pt  → 24 px (16–18 pt)
+ *   Mínimo      12 pt                → 16 px
+ */
+:root {
+  --dcs-navy: #12285f;
+  --dcs-azul: #016aa9;
+  --dcs-cian: #009cde;
+  --dcs-amarillo: #ffc422;
+  --dcs-tinta: #1a2238;
+  --dcs-cielo: #ccedf9;
+  --dcs-bruma: #edf9fd;
+  --dcs-atardecer: #eeeaf6;
+  --dcs-amanecer: #ffeaaf;
+
+  /* Márgenes de la plantilla */
+  --dcs-margen-x: 58px;
+  --dcs-cabecera-top: 43px;
+  --dcs-cabecera-alto: 72px;
+  --dcs-contenido-top: 187px;
+  --dcs-pie-top: 667px;
+
+  --slidev-theme-primary: var(--dcs-azul);
+  --slidev-code-radius: 12px;
+  --slidev-code-background: #fff;
+  --slidev-code-font-size: 20px;
+  --slidev-code-line-height: 1.5;
+  --slidev-code-padding: 20px 24px;
+}
+
+.slidev-layout {
+  font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: var(--dcs-tinta);
+  font-variant-numeric: tabular-nums; /* "Cifras siempre tabulares" */
+  background: var(--dcs-bruma);
+}
+
+/* ---------- Tipografía ---------- */
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3 {
+  font-weight: 700;
+  color: var(--dcs-navy);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+.slidev-layout h1 { font-size: 37px; } /* 28 pt */
+.slidev-layout h1 + p {                 /* subtítulo bajo el título */
+  font-size: 24px;
+  color: var(--dcs-azul);
+  margin-top: 4px;
+}
+.slidev-layout h2 { font-size: 32px; }
+.slidev-layout h3 { font-size: 27px; }  /* 20 pt */
+.slidev-layout p { margin: 0 0 16px; }
+/* Texto tras un bloque (grid, tarjeta…) de primer nivel: mismo aire que gap-6 */
+.dcs-contenido > div + :is(p, ul, ol) { margin-top: 24px; }
+.slidev-layout a { color: var(--dcs-azul); text-decoration: underline; }
+.slidev-layout strong { font-weight: 700; color: var(--dcs-navy); }
+
+/* Listas: viñeta "•" en Tinta, ~11,6 pt entre elementos */
+.slidev-layout ul,
+.slidev-layout ol {
+  margin: 0 0 16px;
+  padding-left: 36px;
+}
+.slidev-layout ul { list-style: disc; }
+.slidev-layout ol { list-style: decimal; }
+.slidev-layout li { padding-left: 4px; }
+.slidev-layout li + li { margin-top: 15px; }
+.slidev-layout li::marker { color: var(--dcs-tinta); }
+.slidev-layout li li { font-size: 0.9em; margin-top: 10px; }
+
+/* Cita */
+.slidev-layout blockquote {
+  background: var(--dcs-atardecer);
+  border-radius: 12px;
+  padding: 32px 40px;
+  font-size: 27px;
+  font-weight: 700;
+  color: var(--dcs-navy);
+}
+
+/* Código */
+.slidev-layout code { font-size: 0.9em; }
+.slidev-layout :not(pre) > code {
+  background: var(--dcs-cielo);
+  color: var(--dcs-navy);
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+}
+.slidev-layout pre,
+.slidev-layout .slidev-code {
+  border-radius: 12px;
+  font-size: var(--slidev-code-font-size);
+  line-height: var(--slidev-code-line-height);
+}
+.slidev-layout .slidev-code-wrapper { margin: 16px 0; }
+
+/* ---------- Fondos ---------- */
+.dcs-fondo-bruma      { background: var(--dcs-bruma) url('../assets/fondos/bruma.jpg') center / cover; }
+.dcs-fondo-cielo      { background: var(--dcs-bruma) url('../assets/fondos/cielo.jpg') center / cover; }
+.dcs-fondo-sol-navy   { background: var(--dcs-navy) url('../assets/fondos/sol-navy.jpg') center / cover; }
+.dcs-fondo-navy       { background: var(--dcs-navy) url('../assets/fondos/navy.jpg') center / cover; }
+.dcs-fondo-plano      { background: var(--dcs-bruma) url('../assets/fondos/plano.jpg') center / cover; }
+.dcs-fondo-plano-navy { background: var(--dcs-navy) url('../assets/fondos/plano-navy.jpg') center / cover; }
+.dcs-fondo-blanco     { background: #fff; }
+
+/* Variante oscura: texto en blanco sobre navy */
+.dcs-oscuro,
+.dcs-oscuro h1, .dcs-oscuro h2, .dcs-oscuro h3, .dcs-oscuro strong {
+  color: #fff;
+}
+.dcs-oscuro li::marker { color: #fff; }

@@ -1,0 +1,16 @@
+{
+  "name": "slidev-theme-drupalcamp-spain-2026",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tema de Slidev basado en la plantilla oficial de DrupalCamp Spain 2026 (Madrid)",
+  "keywords": ["slidev-theme", "slidev"],
+  "engines": { "slidev": ">=53.0.0" },
+  "slidev": {
+    "colorSchema": "light",
+    "defaults": {
+      "aspectRatio": "16/9",
+      "canvasWidth": 1280,
+      "fonts": { "provider": "none", "sans": "Inter Variable", "mono": "ui-monospace, JetBrains Mono, Fira Code, monospace" }
+    }
+  }
+}
