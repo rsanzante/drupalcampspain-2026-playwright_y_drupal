@@ -22,8 +22,8 @@ logs:
 shell:            ## Shell dentro del contenedor
 	$(RUN) bash
 
-build:            ## Genera la web estática en dist/
-	$(RUN) pnpm exec slidev build
+build:            ## Genera la web estática en dist/ (BASE=/ruta/ opcional)
+	$(RUN) pnpm exec slidev build $(if $(BASE),--base $(BASE))
 
 add:              ## make add PKG=nombre@version
 	$(RUN) pnpm add $(PKG)

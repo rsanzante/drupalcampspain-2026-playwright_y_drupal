@@ -77,9 +77,6 @@ Tipos de tests usados en Drupal _core_
   </div>
 </div>
 
-<!--
-Nos centramos en Nightwatch.
--->
 
 ---
 seccion: '01'
@@ -97,15 +94,6 @@ seccion: '01'
 - La depuración es difícil
 
 
-<!--
-
-Nightwatch está construido sobre WebDriver. Desde la versión 2 tiene algo de
-red y consola vía CDP, pero solo en Chrome.
-Popularidad (issue #3467492): Playwright ~16 M descargas semanales en npm,
-Nightwatch ~112 K.
-Hay que sincronizar las versiones del navegador, su driver y Nightwatch, porque son componentes distintos.
-
--->
 
 ---
 seccion: '01'
@@ -139,24 +127,6 @@ Parecía que sí… pero la migración está parada.
   </div>
 </div>
 
-<!--
-Issues:
-- #3467492 «[policy, no patch] Replace Nightwatch with Playwright», Fixed
-  21 oct 2025.
-- #3553673 «Migrate from Nightwatch to Playwright (and phpunit Axe) tests»,
-  MR !14733 contra main. Pospuesta el 17 nov 2026: la mayoría de lo que hace
-  Nightwatch quedará cubierto al pasar los tests de a11y a PHPUnit
-  (#3338664). Después se reevaluará qué necesita de verdad Playwright.
-  73 tests pasaban en ~15 min.
-- #3638792: añadir @drupal/playwright a las dependencias de core y un job
-  de CI que ejecute tests de Playwright si existen. Needs work.
-- #3338664 tests de accesibilidad (Axe) a PHPUnit, también Needs work.
-- Retirar la dependencia de Nightwatch: probablemente Drupal 12.
-
-Revisar el estado de los issues el día antes de la charla.
-Llamada a la acción: revisar el MR, probarlo, ayudar con los a11y.
--->
-
 
 ---
 seccion: '01'
@@ -185,29 +155,6 @@ Nadie discute sus capacidades. Las dudas son de **coste y encaje en _core_**:
   </div>
 </div>
 
-<!--
-Las objeciones vienen de la issue de política (#3467492) y del MR de
-migración. Nadie dice que Playwright sea peor que Nightwatch; la duda es si
-compensa en core.
-
-- Preparar el escenario (murz en #3467492, mstrelan en el MR): los tests de Nightwatch instalan módulos,
-  crean roles y asignan permisos por la interfaz. Los FunctionalJavascript lo
-  hacen con APIs PHP en setUp(). Playwright solo lo arregla si core construye
-  un puente PHP para la preparación, y eso hay que hacerlo y mantenerlo.
-- Mantenimiento (longwave, mstrelan): quien escribe los tests en JS no es
-  quien acaba manteniéndolos. Los contribuidores habituales de core son sobre
-  todo de PHP y ya conocen la familia BrowserTestBase.
-- Inestabilidad (deviantintegral, cuyo equipo en Lullabot usa Playwright como
-  estándar): la mayoría de fallos "aleatorios" que ha visto eran condiciones
-  de carrera reales de la aplicación, no del framework.
-- CI (murz): varios navegadores es una ventaja, pero multiplica el tiempo.
-  Ni siquiera 10 ejecuciones repetidas de la suite convertida cabían en el
-  límite de 30 minutos por job.
-
-Enlace con lo que viene: en proyectos propios estos problemas pesan menos
-(el equipo que escribe los tests los mantiene, y la preparación se puede
-hacer con Drush).
--->
 
 
 ---
@@ -236,24 +183,6 @@ Las objeciones son de _core_.
 
 <p>Fuera de Drupal, es la herramienta más usada del ecosistema JS para pruebas e2e.</p>
 
-<!--
-Después del jarro de agua fría: que core no lo adopte no cambia nada en tu
-proyecto. Las cuatro objeciones de la diapo anterior pesan poco fuera de core:
-
-- Preparar el escenario: con Drush o con los paquetes de la sección 4.
-- Mantenimiento: lo mantiene el mismo equipo que lo escribe.
-- Inestabilidad: muchos fallos "aleatorios" son fallos reales de la web.
-- CI: decides tú cuántos navegadores y cuándo.
-
-Las tres tarjetas adelantan lo que viene:
-- Soportado por contrib (sección 4): Canvas con @drupal/playwright (contrib, aunque use el scope
-  @drupal); Lullabot con ddev-playwright y @lullabot/playwright-drupal.
-- Testing avanzado y herramientas (secciones 3 y 5): las herramientas de depuración responden al "la depuración
-  es difícil" de Nightwatch. Y sirve para mucho más que testing.
-- Preparado para la IA (sección 6): Playwright MCP y los test agents.
-
-Cierre: la comunidad JS ya se movió a Playwright (diapo de Nightwatch).
--->
 
 
 ---
@@ -294,13 +223,6 @@ seccion: '02'
   - Conexión a navegadores
   - Máximo control de diferentes navegadores
 
-<!--
-En Drupal usaremos JavaScript/TypeScript (es lo que usa core), pero existe
-para otros lenguajes con la misma API.
-
-Playwright descarga sus propios navegadores porque los que no son Chromium están parcheados para ofrecer un mayor control. Con WebDriver BiDi podría dejar de ser necesario. Desde 1.57, en lugar de Chromium usa Chrome for Testing.
--->
-
 ---
 seccion: '02'
 ---
@@ -328,13 +250,6 @@ seccion: '02'
 - Versiones propias (parcheadas) de navegadores no Chromium para mayor control
 - Puede controlar navegadores remotos (p. ej., en contenedores)
 
-<!--
-Lo de WebKit en Linux es un argumento potente: probar "Safari" sin tener
-un Mac.
-
-No usar WebDriver es lo que le da velocidad y control fino (red, eventos,
-varias pestañas), igual que Puppeteer pero con los tres motores.
--->
 
 ---
 seccion: '02'
@@ -343,14 +258,6 @@ seccion: '02'
 # Arquitectura de Playwright
 
 <img src="/arquitectura_playwright.svg" class="mx-auto" style="height: 650px; margin-top: -4.5rem" alt="Arquitectura de Playwright" />
-
-<!--
-El proceso de test (Node.js) usa la API cliente para hablar con el servidor
-de Playwright mediante el protocolo propio (JSON por pipe o WebSocket).
-El servidor controla cada motor de forma nativa: CDP para Chromium, Juggler
-para Firefox e Inspector para WebKit. Dentro del navegador hay contextos
-aislados, páginas y un script inyectado que gestiona selectores y esperas.
--->
 
 
 ---
@@ -398,24 +305,6 @@ test.describe('Login', () => {
 </div>
 </div>
 
-<!--
-Visión general antes de entrar en detalle.
-
-- El runner busca ficheros *.spec.ts (o .test.ts) en testDir, que se
-  define en playwright.config.ts.
-- ¿Cómo sabe que un test falla? No hay "return false": la función es
-  async y si lanza una excepción (o la promesa se rechaza) el test falla.
-  expect lanza cuando no se cumple; también falla por excepción no
-  capturada o si se pasa del timeout (30 s por defecto).
-- Suites: cada fichero es una suite y cada describe, una suite anidada.
-  Los proyectos de la configuración también agrupan.
-- Tags: `{ tag: '@smoke' }` en test o describe; se filtra con
-  `--grep @smoke` o `--grep-invert @lento`. También test.skip,
-  test.only, test.fixme.
-- Hooks: beforeEach/afterEach por test, beforeAll/afterAll una vez por
-  worker. En la práctica se usan más las fixtures (lo veremos).
--->
-
 ---
 seccion: '03'
 ---
@@ -457,31 +346,6 @@ seccion: '03'
   </div>
 </div>
 
-<!--
-Repaso rápido de las acciones; no hay que explicar cada una. Fila de
-arriba (cielo): lo básico de cualquier test. Fila de abajo (blanca): lo
-que suele dar guerra con otras herramientas.
-
-- Navegar: page.goto(url), goBack/goForward, reload. waitForURL para
-  esperar una redirección.
-- Formularios: fill (texto), check/uncheck (casillas y radios),
-  selectOption (select). clear() para vaciar.
-- Ratón: click (con opciones: botón derecho, modificadores, posición),
-  dblclick, hover (menús desplegables de Drupal), dragTo (tabledrag, Layout
-  Builder).
-- Teclado: press('Enter'), atajos ('Control+A'), pressSequentially para
-  escribir tecla a tecla (autocompletados de Drupal).
-- Ficheros: setInputFiles en campos de imagen o fichero; descargas con
-  page.waitForEvent('download').
-- Ventanas: popups con waitForEvent('popup'), iframes con frameLocator
-  (CKEditor clásico, embeds), diálogos nativos (alert, confirm, prompt,
-  beforeunload) con page.on('dialog', d => d.accept()). No están en el
-  DOM; por defecto Playwright los cierra solo.
-- Leer: textContent, inputValue, getAttribute; evaluate ejecuta JS en la
-  página (p. ej. leer drupalSettings).
-- Capturas: screenshot de página o de un elemento, pdf (solo Chromium),
-  vídeo de la ejecución desde la configuración.
--->
 
 ---
 seccion: '03'
@@ -523,16 +387,16 @@ await pg.getByRole('button', { name: 'Log in' })
 
 <!--
 Nightwatch 3 también tiene findByRole, findByLabelText o findByText, pero
-los tests de core usan selectores CSS.
+los tests de core usan selectores CSS. Seguramente porque esto se añadió hace
+unos 3 o 4 años y Nightwatch se empezó a usar en el core en 2018.
 
 Los localizadores por rol usan el árbol de accesibilidad: el test se parece
 a cómo una persona usa la web y no depende de IDs ni clases del tema.
 
-Efecto secundario: empuja a tener formularios accesibles (labels bien
+Efecto secundario: ayuda a tener formularios accesibles (labels bien
 asociados, botones con nombre).
 
-En Drupal multilingüe el texto cambia: usar el idioma del sitio de test o
-getByTestId en casos concretos.
+
 -->
 
 ---
@@ -579,12 +443,6 @@ Ejemplos de Drupal donde esto salva tests: el throbber de AJAX, los
 diálogos modales, BigPipe rellenando bloques, CKEditor 5 inicializándose.
 "Está quieto" = no se está animando.
 
-"Web-first assertions": toBeVisible, toHaveText, toHaveURL, toHaveValue,
-toHaveCount… El error más común al empezar es leer el estado una vez y
-compararlo. Si el mensaje de estado de Drupal aún no ha aparecido, falla.
-
-Con expect(locator) Playwright reintenta hasta el timeout (5 s por
-defecto, configurable).
 -->
 
 ---
@@ -652,8 +510,6 @@ Configuración en playwright.config.js:
 - trace: 'on-first-retry': si un test falla y se reintenta, guarda la
   traza. Es la respuesta al "falla en CI y no sé por qué".
 
-Fixtures: inyección de dependencias para tests. Se ven en la siguiente
-diapositiva.
 -->
 
 ---
@@ -709,8 +565,6 @@ La secuencia:
 6. Al acabar (bien o mal), use() se resuelve y sigue la fixture: borrarNodo.
 7. Playwright cierra page, context y request.
 
-Es el mismo patrón que yield en pytest o next() en un middleware: un
-try/finally alrededor del test.
 
 request: cliente HTTP sin navegador. crearNodo puede hacer un POST a JSON:API.
 Si se crea con Drush, no hace falta pedir request.
@@ -780,7 +634,7 @@ test('vaciar el carrito', async ({ carrito }) => {
 <!--
 POM: una clase que encapsula cómo se usa una página o un componente.
 Ejemplo del carrito: vaciar(), cambiarCantidad(), irAlCheckout()…
-Si cambia el HTML se arregla en un sitio, no en cien tests.
+Si cambia el HTML solo hay que arreglarlo en un sitio.
 
 conProductos() se deja sin cuerpo: puede añadir los productos por la UI,
 con Drush o con la API. El test no necesita saber cómo; esa es la gracia.
@@ -797,8 +651,7 @@ Riesgo: acabar escribiendo "una API de toda tu web". Tres reglas:
 
 En Drupal compensa más un objeto por componente que por URL: CKEditor,
 Media Library, el formulario de nodo, la barra de administración se repiten
-en muchas páginas. Ckeditor5 de @lullabot/playwright-drupal es justo eso, y
-CKEditor 5 Paste Filter tiene objects/CKEditor5.ts y objects/Drupal.ts.
+en muchas páginas.
 -->
 
 ---
@@ -844,35 +697,6 @@ test('vaciar el carrito', async ({ carrito }) => {
   </div>
 </div>
 
-<!--
-Pregunta real de alguien con un proyecto grande en Behat: "me preocupa
-perder legibilidad".
-
-- Las step definitions de Behat ya son un POM, con expresiones regulares en
-  medio. En Playwright quitas la traducción: el editor autocompleta y te
-  lleva a la definición.
-- Con POM el test se lee casi como un escenario. test.step('Dado…') añade
-  pasos con nombre que salen en el informe HTML y en el trace.
-- playwright-bdd (vitalets/playwright-bdd, 9.x): convierte los .feature en
-  tests de Playwright. Conservas los escenarios y reescribes solo los steps,
-  y ganas paralelismo, trace, UI mode…
-- Migración corta, no gradual: convivir años con dos stacks (dos CI, dos
-  formas de preparar datos) sale más caro, y los de Behat acaban sin
-  actualizar. Con IA haciendo el grueso de la traducción, compensa migrar de
-  una vez:
-  - PoC con los escenarios difíciles. Traducir el texto es fácil; lo difícil
-    es lo que da la Drupal Extension ("logged in as a user with the editor
-    role", "article content:" con tabla, la limpieza). Si la PoC resuelve eso
-    con Drush o fixtures, el resto es mecánico.
-  - Revisar lo que traduce la IA: el riesgo es un test que pasa sin comprobar
-    lo mismo. Truco: romper la funcionalidad y ver que el test nuevo falla.
-  - Fecha para apagar Behat: ningún test nuevo en Behat desde el primer día;
-    cada .feature se borra cuando su equivalente pasa en CI.
-- playwright-bdd no es un paso intermedio (alargaría la convivencia) sino un
-  destino para quien tenga a negocio leyendo los .feature.
--->
-
-
 
 ---
 seccion: '03'
@@ -899,15 +723,6 @@ seccion: '03'
   </div>
 </div>
 
-<!--
-Esta es la diapositiva que responde al "la depuración es difícil" de
-Nightwatch.
-La traza es un fichero zip que se descarga de los artefactos de CI y se
-abre con `npx playwright show-trace` o en trace.playwright.dev (en local,
-no se sube nada).
-
-Hay también extensión oficial para VS Code.
--->
 
 ---
 layout: none
@@ -943,15 +758,6 @@ seccion: '03'
   </div>
 </div>
 
-<!--
-Pasar rápido, es un escaparate.
-
-- Visual: útil para el tema; cuidado con fuentes y SO distintos entre
-  local y CI (generar las capturas de referencia en el mismo contenedor).
-- Aria snapshot: YAML con roles y nombres, menos frágil que una captura.
-- route(): simular que un servicio externo falla o tarda.
-- request: comprobar JSON:API o preparar datos antes del test.
--->
 
 
 ---
@@ -975,16 +781,6 @@ test('la portada no tiene errores de accesibilidad', async ({ page }) => {
 - Automatiza la parte detectable de WCAG: contraste, etiquetas, ARIA…
 - No sustituye a una revisión manual
 
-<!--
-@axe-core/playwright es el paquete oficial de Deque.
-
-Conexión con core: los tests a11y de Nightwatch usan axe; en core van a
-pasar a PHPUnit (#3338664). En un proyecto se puede hacer directamente con
-Playwright.
-
-Las herramientas automáticas detectan entre un 30 % y un 57 % de los
-problemas de accesibilidad, según el estudio (GDS / Deque).
--->
 
 ---
 layout: section
@@ -1021,32 +817,6 @@ seccion: '04'
 <p class="mt-6">Los dos paquetes npm añaden <em>fixtures</em> y acciones sobre Drupal: login, crear usuarios, instalar módulos…</p>
 
 
-<!--
-- Lullabot/ddev-playwright: solo el entorno, no sabe nada de Drupal.
-  Navegadores en una capa de la imagen (solo si ejecutas
-  `ddev install-playwright`), KasmVNC en :8444, informe en :9324, confía en
-  el certificado HTTPS de DDEV, tmpfs para SQLite.
-- Nombres: en npm, @organización/paquete es un paquete con scope. Solo esa
-  organización puede publicar con ese prefijo, así que @drupal/playwright es
-  oficial de la comunidad Drupal y @lullabot/... es de Lullabot. Se instalan
-  con npm i -D <nombre> en la carpeta de los tests.
-  Lullabot/ddev-playwright es usuario/repositorio de GitHub: es lo que
-  recibe `ddev add-on get`.
-- @lullabot/playwright-drupal (v2.1.1): `test` extendido que da a cada test
-  su copia SQLite del sitio ya preparado (drush site:install, tu config o tu
-  BD MySQL convertida a SQLite). Adjunta al informe los errores PHP y de
-  consola (no hace fallar el test).
-  Ayudas: execDrushInTestSite, login, formularios, AJAX, CKEditor 5, Media
-  Library, Gin, dblog, accesibilidad, capturas. Solo soportado con DDEV,
-  también en CI.
-- @drupal/playwright (v2.0.0, proyecto drupal.org/project/playwright,
-  publicado en npm): instala Drupal con core/scripts/test-site.php, como los
-  tests funcionales y Nightwatch. Fixtures parallelWorker, isolatedPerTest e
-  isolatedPerTestSnapshot. Objeto drupal: loginAsAdmin, createUser,
-  createRole, addPermissions, installModules, applyRecipe, dr().
-  Funciona sin DDEV (CI de drupal.org).
--->
-
 ---
 seccion: '04'
 ---
@@ -1079,22 +849,6 @@ ddev install-playwright   # navegadores, solo en quien los necesite
 ddev playwright test      # KasmVNC en :8444, informe en :9324
 ```
 
-<!--
-- Agnóstico: igual vale para un proyecto Laravel o un WordPress. La parte de
-  Drupal la pone la librería @lullabot/playwright-drupal.
-- Mismo contenedor que web: la diferencia con el otro add-on (julienloizelet),
-  que usa un contenedor aparte con la imagen de Microsoft. Como Node y PHP
-  están juntos, las librerías pueden lanzar drush o test-site.php.
-- KasmVNC: https://<proyecto>.ddev.site:8444, sin login. Informe HTML en
-  https://<proyecto>.ddev.site:9324 con `ddev playwright show-report`.
-- Navegadores: se instalan en una capa de la imagen, cacheada, según la
-  versión de @playwright/test del package.json. Quien no ejecuta
-  `ddev install-playwright` no paga el coste. Chromium, Firefox y WebKit
-  confían en la CA de mkcert: no hace falta ignoreHTTPSErrors.
-- Extras pensados para la librería de Lullabot: monta /tmp/sqlite en memoria
-  (se borra con ddev restart) e instala go-task y uv.
-- Tests por defecto en test/playwright (PLAYWRIGHT_TEST_DIR en .ddev/.env).
--->
 
 ---
 seccion: '04'
@@ -1146,69 +900,6 @@ seccion: '04'
 
 <p class="mt-3"><span class="dcs-etiqueta">Requiere</span> <span class="ml-3 [font-variant-numeric:normal]">DDEV + ddev-playwright, <code>settings.playwright.php</code> y un <code>Taskfile.yml</code></span></p>
 
-<!--
-Cómo funciona la copia:
-1. Antes de los tests (globalSetup), si no existe /tmp/sqlite/.ht.sqlite,
-   ejecuta `task playwright:install` con PLAYWRIGHT_SETUP=1:
-   settings.playwright.php cambia la conexión a ese fichero, así que tu
-   MariaDB no se toca. Usa tu tarea playwright:install:hook o, si no hay,
-   `drush site:install demo_umami`.
-2. Cada test: copia .ht.sqlite a /tmp/sqlite/<id>/ y pone la cookie
-   SIMPLETEST_USER_AGENT. Drupal la reconoce como petición de test y
-   settings.playwright.php la manda a esa copia. Al acabar, la borra.
-3. Tu navegación normal (sin cookie) sigue en MariaDB.
-
-Base de tu sitio: `drush site:install --existing-config` en el hook (hay que
-activar el módulo sqlite y exportar config) o
-`ddev exec task playwright:mysql-to-sqlite` para convertir tu MariaDB.
-
-Sin aislamiento: PLAYWRIGHT_NO_TEST_ISOLATION=1, contra MariaDB, mejor con
---workers=1.
-
-Ayudas: execDrushInTestSite, login, saveDrupalForm, waitForAjax, Gin,
-Media Library, dblog, informe de estado, axe con exclusiones para Drupal,
-comparación visual. definePlaywrightDrupalConfig() para la configuración.
-
-Solo soportado con DDEV, también en CI (GitHub Actions, GitLab CI).
-
-
-Requerido:
-  - Incluir settings.playwright.php después del de DDEV para que así una petición
-    con la cookie use la BD correspondiente de SQLite.
-  - El Taskfile hay que crearlo, aunque basta con incluir el que ofrece la librería.
-
-Ayudas:
-Todo se importa de '@packages/playwright-drupal' (la copia que hace el
-globalSetup), no del nombre npm.
-
-- login(page, user = 'admin'): genera un enlace de un solo uso con
-  drush user:login, navega a él y comprueba la cookie de sesión.
-- execDrushInTestSite('…'): Drush arranca contra el sitio del test, no
-  contra el normal.
-- Ckeditor5: new Ckeditor5(page, '#edit-body-wrapper').fill('…').
-- saveDrupalForm(page, { fallback, addFormPathPattern }): espera AJAX, pulsa
-  el "Save" real (compatible con Gin y autosave_form), devuelve 'ok' si la
-  URL deja la de alta o 'error' si aparece .messages--error. Debajo:
-  waitForAjax (mismo criterio que assertWaitOnAjaxRequest de core),
-  openAllDetails, clickSaveButton, waitForSaveOutcome.
-- truncateDblog() al empezar + checkDblogForErrors() al final, con
-  formatLogErrors() para el mensaje: errores y críticos del watchdog.
-- a11y.check(): fixture con axe; excluye skip link, landmarks, vistas
-  previas de media. checkAccessibility y takeAccessibleScreenshot también.
-
-Otras: selectFirstMediaFromLibrary, uploadManagedFile, fillOembedUrl,
-extractEntityIdFromPage, validateRequiredModules, getStatusReport,
-clickSubmit (Gin), dismissAutosaveDraft, idPrefixSelector,
-defineVisualDiffConfig.
-
-Firmas comprobadas en el código de la v2.1.1.
-
-dblog no es automático: truncateDblog() al empezar, checkDblogForErrors()
-al final y expect(errors, formatLogErrors(errors)).toEqual([]).
-
-Y más: Media Library, subida de ficheros, Gin, autosave_form, informe de
-estado, comparación visual…
--->
 
 ---
 seccion: '04'
@@ -1236,31 +927,6 @@ seccion: '04'
   </div>
 </div>
 
-<!--
-Proyecto drupal.org/project/playwright, publicado en npm como
-@drupal/playwright (v2.0.0, 6 nov 2026). Lo mantiene Sally Young.
-
-Instala con `php core/scripts/test-site.php install`, el mismo script que
-usa Nightwatch en core.
-
-Fixtures:
-- parallelWorker: un sitio por worker, los tests lo comparten (no deben
-  dejar cambios).
-- isolatedPerTest: una instalación por test. Lo más seguro y lo más lento.
-- isolatedPerTestSnapshot: instala una vez por worker y restaura una
-  instantánea antes de cada test. Necesita SQLite. Con snapshotCache la
-  instantánea se reutiliza entre ejecuciones si el código no cambia.
-
-Opciones con test.use: installProfile, modules, enableTestExtensions.
-
-Objeto drupal: loginAsAdmin, login, logout, createUser, createRole,
-addPermissions, installModules, uninstallModules, applyRecipe, clearCache,
-dr() (Drupal 11.4+).
-
-Variables: DRUPAL_TEST_BASE_URL, DRUPAL_TEST_DB_URL, DRUPAL_TEST_DRUPAL_ROOT.
-Incluye una regla de ESLint para usar rutas relativas ('./user/login'), porque
-el CI de drupal.org sirve el sitio en un subdirectorio.
--->
 
 ---
 layout: section
@@ -1290,15 +956,6 @@ await browser.close()
 
 - Solo la librería, sin runner ni aserciones: un script de Node normal
 
-<!--
-Volvemos al "todo en uno" del bloque 2: aquí solo usamos la conexión a
-navegadores. Este script hace capturas de
-página completa de una lista de URLs. Se podría leer la lista del
-sitemap.xml del sitio.
-
-La misma API que en los tests: page.goto, locators, etc.
--->
-
 ---
 seccion: '05'
 ---
@@ -1324,14 +981,6 @@ seccion: '05'
   </div>
 </div>
 
-<!--
-Ejemplos sacados de proyectos reales (adaptar con casos propios de
-Metadrop si los hay):
-- Migración D7 → D11: listado de URLs del sitio viejo, comprobar que cada
-  una existe en el nuevo (o redirige) y comparar el título y el cuerpo.
-- Errores de consola: page.on('console') y page.on('pageerror').
-- Monitorización sintética: el mismo test, programado cada X minutos.
--->
 
 ---
 layout: section
@@ -1368,15 +1017,6 @@ seccion: '06'
 </div>
 </div>
 
-<!--
-Es la misma idea que los localizadores por rol: el árbol de accesibilidad
-describe la página como la entiende una persona.
-
-Desde 1.64, page.getByRef('e16') permite usar esas referencias también
-desde código.
-
-Otra vez: una web accesible es una web que los agentes manejan mejor.
--->
 
 ---
 seccion: '06'
@@ -1395,52 +1035,6 @@ claude mcp add playwright -- npx @playwright/mcp@latest
 - **playwright-cli**: lo mismo con comandos de terminal, y gasta menos tokens
 - Desde 1.64 soporta **WebMCP**: la página ofrece sus propias herramientas al agente (experimental)
 
-<!--
-MCP = Model Context Protocol, el estándar para dar herramientas a los
-agentes. Funciona con Claude Code, VS Code/Copilot, Cursor, etc.
-
-Usos: "entra en el Drupal de staging y comprueba que el formulario de
-contacto envía", reproducir un bug descrito en un ticket, explorar un
-sitio para escribir tests.
-
-1.64 añade WebMCP: la propia página puede registrar herramientas que el
-agente ve como webmcp_<herramienta>.
-
-WebMCP:
-- Es el MCP al revés: no es el agente el que maneja la página, es la página
-  la que le ofrece herramientas al agente. El sitio registra funciones
-  JavaScript con nombre, descripción y esquema de parámetros desde
-  navigator.modelContext (p. ej. "buscarContenido", "añadirAlCarrito") y el
-  agente las llama en lugar de hacer clics.
-- Propuesta en el W3C (Web Machine Learning Community Group). Chrome: prueba
-  para desarrolladores en la 146, origin trial de la 149 a la 156 y
-  previsto en estable en la 157. Firefox y Safari no se han pronunciado.
-- Ventaja: más fiable y gasta menos tokens que leer el árbol de
-  accesibilidad y adivinar botones. Inconveniente: solo existe si el sitio
-  lo implementa.
-- Idea Drupal: un módulo que exponga acciones del sitio (buscar, crear
-  borrador) como herramientas WebMCP. Con Playwright MCP se probaría que el
-  agente las ve y las usa bien.
-- No confundir con Chrome DevTools MCP: eso es un servidor MCP para depurar
-  Chrome (rendimiento, red, consola), solo Chromium. Playwright MCP maneja
-  el navegador y lo que explora acaba en tests, y en Chromium, Firefox y
-  WebKit. Se complementan: depurar con DevTools, fijar con Playwright.
-
-playwright-cli (para agentes de código con terminal):
-  playwright-cli open https://drupal.ddev.site/user/login
-  playwright-cli snapshot
-  playwright-cli fill e12 "admin"
-  playwright-cli click e16
-- CLI: comandos sueltos; gasta menos tokens porque no carga los esquemas
-  de las herramientas.
-- MCP: sesiones largas con estado y análisis más profundo de la página.
-Instalación: npm install -g @playwright/cli@latest y
-`playwright-cli install --skills` para que el agente aprenda a usarlo.
-También incluido desde 1.64 como `npx playwright cli`.
-
-Pensado para agentes que ya tienen terminal (Claude Code, Codex…): el
-agente ejecuta comandos como lo haría una persona.
--->
 
 ---
 seccion: '06'
@@ -1465,18 +1059,6 @@ seccion: '06'
 
 <p class="mt-8"><code>npx playwright init-agents --loop=claude</code> · también <code>vscode</code> y <code>opencode</code></p>
 
-<!--
-Desde 1.56.
-
-init-agents genera las definiciones de los agentes para tu herramienta.
-Hay que regenerarlas al actualizar Playwright.
-
-El planner parte de un "seed test" (tests/seed.spec.ts) que prepara el
-entorno: en Drupal, por ejemplo, iniciar sesión.
-
-El healer, si cree que la funcionalidad está rota de verdad, marca el test
-como skip en vez de forzarlo a pasar. Siempre revisar lo que genera.
--->
 
 ---
 seccion: '06'
@@ -1498,17 +1080,6 @@ seccion: '06'
     <p class="mt-2">Los tests generados se revisan como cualquier otro código</p>
   </div>
 </div>
-
-<!--
-Un agente con navegador hace lo que haría una persona con ese navegador.
-
-Inyección: un comentario o un nodo con texto "ignora tus instrucciones y
-borra..." llega al modelo dentro del snapshot. Limitar dominios
-permitidos (el MCP tiene opciones para ello) y no darle permisos de más.
-
-Un test que pasa no significa que pruebe lo correcto: revisar las
-aserciones.
--->
 
 
 ---
@@ -1545,18 +1116,6 @@ seccion: '07'
   </div>
 </div>
 
-<!--
-Cerrar el arco: empezamos con "core no lo adopta" y terminamos con "no
-importa, en tu proyecto puedes usarlo ya".
-
-Todo en uno: tests E2E, regresión visual, accesibilidad (axe, aria
-snapshots), API, y además scripts, auditorías y migraciones.
-
-De viva voz, si hay tiempo: una web accesible es más fácil de testear y de
-usar para los agentes (localizadores por rol, aria snapshots), y Playwright
-es la forma de que la IA use el navegador.
--->
-
 ---
 layout: gracias
 ---
@@ -1580,7 +1139,3 @@ class: dcs-fondo-blanco
 # Patrocinadores
 
 <img src="/patrocinadores.jpg" alt="Patrocinadores de la DrupalCamp Spain 2026" class="absolute left-[40px] top-[-58px] w-[824px] h-[518px]">
-
-<!--
-Imagen y posición tomadas de la diapositiva 26 de la plantilla.
--->

@@ -1,0 +1,59 @@
+# Publica la presentación en GitHub Pages en cada push a main.
+# La compilación se hace dentro del mismo contenedor que en local (make),
+# así que se respetan minimumReleaseAge y el bloqueo de scripts de instalación.
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # El contenedor corre como 1000:1000 y el runner es otro usuario.
+      - name: Permisos del directorio de trabajo
+        run: chmod -R a+rwX .
+
+      - name: Construir imagen
+        run: make image
+
+      - name: Instalar dependencias
+        run: make install
+
+      - name: Compilar
+        run: make build BASE=/${{ github.event.repository.name }}/
+
+      # Para que las URL directas (/5, /presenter…) funcionen en Pages.
+      # Dentro del contenedor: dist/ pertenece al usuario 1000, no al runner.
+      - name: Fallback SPA
+        run: docker compose run --rm --no-deps slidev cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
